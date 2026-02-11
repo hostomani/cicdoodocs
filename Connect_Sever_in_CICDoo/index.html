@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connect Sever In Cicdoo - Documentation</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif; }
+    .doc-step { counter-increment: step-counter; }
+    .step-connector {
+      position: absolute;
+      left: 19px;
+      top: 40px;
+      bottom: -40px;
+      width: 2px;
+      background: #e5e7eb;
+    }
+    .step-node {
+      position: relative;
+      z-index: 1;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 14px;
+      background: #1e40af;
+      color: white;
+      flex-shrink: 0;
+    }
+    .doc-screenshot {
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+    }
+    .screenshot-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+    .click-highlight {
+      position: absolute;
+      width: 10px; height: 10px;
+      margin-left: -5px; margin-top: -5px;
+      border-radius: 50%;
+      background: #ef4444;
+      pointer-events: none;
+      animation: click-pulse 1.5s ease-out infinite;
+    }
+    @keyframes click-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); transform: scale(1); }
+      50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); transform: scale(1.2); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); transform: scale(1); }
+    }
+
+    /* Sidebar */
+    .sidebar-left {
+      position: sticky;
+      top: 49px;
+      height: calc(100vh - 49px);
+      overflow-y: auto;
+    }
+    .sidebar-right {
+      position: sticky;
+      top: 49px;
+      height: calc(100vh - 49px);
+      overflow-y: auto;
+    }
+    .sidebar-left::-webkit-scrollbar,
+    .sidebar-right::-webkit-scrollbar {
+      width: 3px;
+    }
+    .sidebar-left::-webkit-scrollbar-thumb,
+    .sidebar-right::-webkit-scrollbar-thumb {
+      background: #e5e7eb;
+      border-radius: 3px;
+    }
+    .guide-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #6b7280;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .guide-link:hover { background: #f3f4f6; color: #111827; }
+    .guide-link.active { background: #eff6ff; color: #1e40af; font-weight: 500; }
+    .toc-link {
+      display: block;
+      padding: 4px 12px;
+      border-left: 2px solid transparent;
+      font-size: 13px;
+      color: #6b7280;
+      text-decoration: none;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .toc-link:hover { color: #1e40af; }
+    .toc-link.active { color: #1e40af; border-left-color: #1e40af; font-weight: 500; }
+
+    /* Rich text content */
+    .rich-text p { margin: 0.25em 0; }
+    .rich-text ul, .rich-text ol { margin: 0.25em 0; padding-left: 1.5em; }
+    .rich-text ul { list-style: disc; }
+    .rich-text ol { list-style: decimal; }
+    .rich-text a { color: #2563eb; text-decoration: underline; }
+    .rich-text pre { background: #f3f4f6; border-radius: 6px; padding: 0.75em 1em; font-size: 0.875em; overflow-x: auto; }
+    .rich-text code { background: #f3f4f6; padding: 0.15em 0.3em; border-radius: 3px; font-size: 0.875em; }
+    .rich-text pre code { background: none; padding: 0; }
+
+    @media print {
+      .no-print { display: none !important; }
+      .doc-screenshot { box-shadow: none; break-inside: avoid; }
+      body { background: white; }
+      .main-content { margin: 0 !important; max-width: 100% !important; }
+    }
+    @media (max-width: 1280px) {
+      .sidebar-right { display: none; }
+    }
+    @media (max-width: 1024px) {
+      .sidebar-left { display: none; }
+    }
+  </style>
+</head>
+<body class="bg-white min-h-screen">
+
+  <!-- Top bar -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-10 no-print">
+    <div class="px-6 py-3 flex items-center justify-between">
+      <a href="../index.html" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1.5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        All Guides
+      </a>
+      <button onclick="window.print()" class="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        Print
+      </button>
+    </div>
+  </header>
+
+  <div class="flex">
+
+    <!-- Left sidebar: All guides -->
+    <aside class="sidebar-left no-print w-64 flex-shrink-0 border-r border-gray-100 bg-gray-50">
+      <div class="p-4">
+        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3">Guides</h2>
+        <nav class="space-y-0.5">
+          
+          <a href="../Add_server/index.html" class="guide-link ">
+            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="truncate">Add Server</span>
+          </a>
+          
+          <a href="../Connect_Sever_in_CICDoo/index.html" class="guide-link active">
+            <svg class="w-4 h-4 flex-shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="truncate">Connect Sever In Cicdoo</span>
+          </a>
+          
+          <a href="../Create_Odoo_Project/index.html" class="guide-link ">
+            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="truncate">Create Odoo Project</span>
+          </a>
+          
+          <a href="../Create_Wildcard_DNS_Record___CloudFlare/index.html" class="guide-link ">
+            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="truncate">Create Wildcard Dns Record   Cloudflare</span>
+          </a>
+          
+          <a href="../How_to_create_S3_Backup_Storage___CloudFlare/index.html" class="guide-link ">
+            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="truncate">How To Create S3 Backup Storage   Cloudflare</span>
+          </a>
+          
+          <a href="../Provision_AWS_EC2_Instance/index.html" class="guide-link ">
+            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="truncate">Provision Aws Ec2 Instance</span>
+          </a>
+          
+          <a href="../Restore_Database_To_Staging_Instance/index.html" class="guide-link ">
+            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="truncate">Restore Database To Staging Instance</span>
+          </a>
+          
+          <a href="../nnnjnjnj/index.html" class="guide-link ">
+            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="truncate">Nnnjnjnj</span>
+          </a>
+          
+          <a href="../setup_databse_ssh_tunneling/index.html" class="guide-link ">
+            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="truncate">Setup Databse Ssh Tunneling</span>
+          </a>
+          
+          <a href="../signin_with_google/index.html" class="guide-link ">
+            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="truncate">Signin With Google</span>
+          </a>
+          
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content flex-1 min-w-0 max-w-3xl mx-auto px-8">
+
+      <!-- Document header -->
+      <div class="pt-10 pb-8 border-b border-gray-100">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">Guide</span>
+          <span class="text-xs text-gray-400">11 steps</span>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-900 tracking-tight leading-tight">Connect Sever In Cicdoo</h1>
+      </div>
+
+      <!-- Preamble -->
+      
+
+      <!-- Steps -->
+      <div class="py-10">
+        
+        <div class="doc-step relative pb-12" id="step-1">
+          <div class="flex gap-5">
+            <!-- Timeline -->
+            <div class="relative flex-shrink-0">
+              <div class="step-node">1</div>
+              
+              <div class="step-connector"></div>
+              
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 pt-1.5">
+              
+              <h3 class="text-lg font-semibold text-gray-900 mb-1">Testing Step 1</h3>
+              
+              
+
+              <div class="screenshot-wrapper">
+                <img src="screenshots/screenshot_0003.png"
+                     alt="Step 1"
+                     class="doc-screenshot w-full h-auto"
+                     loading="lazy"
+                     data-click-x="509" data-click-y="105">
+                
+                <div class="click-highlight" style="display:none;" data-click></div>
+                
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+        
+        <div class="doc-step relative pb-12" id="step-2">
+          <div class="flex gap-5">
+            <!-- Timeline -->
+            <div class="relative flex-shrink-0">
+              <div class="step-node">2</div>
+              
+              <div class="step-connector"></div>
+              
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 pt-1.5">
+              
+              <p class="text-sm text-gray-500 mb-2">
+                Click in Google Chrome
+              </p>
+              
+              
+
+              <div class="screenshot-wrapper">
+                <img src="screenshots/screenshot_0012.png"
+                     alt="Step 2"
+                     class="doc-screenshot w-full h-auto"
+                     loading="lazy"
+                     data-click-x="781" data-click-y="452">
+                
+                <div class="click-highlight" style="display:none;" data-click></div>
+                
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+        
+        <div class="doc-step relative pb-12" id="step-3">
+          <div class="flex gap-5">
+            <!-- Timeline -->
+            <div class="relative flex-shrink-0">
+              <div class="step-node">3</div>
+              
+              <div class="step-connector"></div>
+              
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 pt-1.5">
+              
+              <p class="text-sm text-gray-500 mb-2">
+                Click in Google Chrome
+              </p>
+              
+              
+
+              <div class="screenshot-wrapper">
+                <img src="screenshots/screenshot_0031.png"
+                     alt="Step 3"
+                     class="doc-screenshot w-full h-auto"
+                     loading="lazy"
+                     data-click-x="794" data-click-y="781">
+                
+                <div class="click-highlight" style="display:none;" data-click></div>
+                
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+        
+        <div class="doc-step relative pb-12" id="step-4">
+          <div class="flex gap-5">
+            <!-- Timeline -->
+            <div class="relative flex-shrink-0">
+              <div class="step-node">4</div>
+              
+              <div class="step-connector"></div>
+              
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 pt-1.5">
+              
+              <p class="text-sm text-gray-500 mb-2">
+                Click in Google Chrome
+              </p>
+              
+              
+
+              <div class="screenshot-wrapper">
+                <img src="screenshots/screenshot_0035.png"
+                     alt="Step 4"
+                     class="doc-screenshot w-full h-auto"
+                     loading="lazy"
+                     data-click-x="999" data-click-y="908">
+                
+                <div class="click-highlight" style="display:none;" data-click></div>
+                
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+        
+        <div class="doc-step relative pb-12" id="step-5">
+          <div class="flex gap-5">
+            <!-- Timeline -->
+            <div class="relative flex-shrink-0">
+              <div class="step-node">5</div>
+              
+              <div class="step-connector"></div>
+              
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 pt-1.5">
+              
+              <p class="text-sm text-gray-500 mb-2">
+                Click in Google Chrome
+              </p>
+              
+              
+
+              <div class="screenshot-wrapper">
+                <img src="screenshots/screenshot_0036.png"
+                     alt="Step 5"
+                     class="doc-screenshot w-full h-auto"
+                     loading="lazy"
+                     data-click-x="857" data-click-y="740">
+                
+                <div class="click-highlight" style="display:none;" data-click></div>
+                
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+        
+        <div class="doc-step relative pb-12" id="step-6">
+          <div class="flex gap-5">
+            <!-- Timeline -->
+            <div class="relative flex-shrink-0">
+              <div class="step-node">6</div>
+              
+              <div class="step-connector"></div>
+              
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 pt-1.5">
+              
+              <p class="text-sm text-gray-500 mb-2">
+                Click in Google Chrome
+              </p>
+              
+              
+
+              <div class="screenshot-wrapper">
+                <img src="screenshots/screenshot_0038.png"
+                     alt="Step 6"
+                     class="doc-screenshot w-full h-auto"
+                     loading="lazy"
+                     data-click-x="1111" data-click-y="553">
+                
+                <div class="click-highlight" style="display:none;" data-click></div>
+                
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+        
+        <div class="doc-step relative pb-12" id="step-7">
+          <div class="flex gap-5">
+            <!-- Timeline -->
+            <div class="relative flex-shrink-0">
+              <div class="step-node">7</div>
+              
+              <div class="step-connector"></div>
+              
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 pt-1.5">
+              
+              <p class="text-sm text-gray-500 mb-2">
+                Click in Google Chrome
+              </p>
+              
+              
+
+              <div class="screenshot-wrapper">
+                <img src="screenshots/screenshot_0043.png"
+                     alt="Step 7"
+                     class="doc-screenshot w-full h-auto"
+                     loading="lazy"
+                     data-click-x="146" data-click-y="299">
+                
+                <div class="click-highlight" style="display:none;" data-click></div>
+                
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+        
+        <div class="doc-step relative pb-12" id="step-8">
+          <div class="flex gap-5">
+            <!-- Timeline -->
+            <div class="relative flex-shrink-0">
+              <div class="step-node">8</div>
+              
+              <div class="step-connector"></div>
+              
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 pt-1.5">
+              
+              <p class="text-sm text-gray-500 mb-2">
+                Click in Google Chrome
+              </p>
+              
+              
+
+              <div class="screenshot-wrapper">
+                <img src="screenshots/screenshot_0044.png"
+                     alt="Step 8"
+                     class="doc-screenshot w-full h-auto"
+                     loading="lazy"
+                     data-click-x="146" data-click-y="341">
+                
+                <div class="click-highlight" style="display:none;" data-click></div>
+                
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+        
+        <div class="doc-step relative pb-12" id="step-9">
+          <div class="flex gap-5">
+            <!-- Timeline -->
+            <div class="relative flex-shrink-0">
+              <div class="step-node">9</div>
+              
+              <div class="step-connector"></div>
+              
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 pt-1.5">
+              
+              <p class="text-sm text-gray-500 mb-2">
+                Click in Google Chrome
+              </p>
+              
+              
+
+              <div class="screenshot-wrapper">
+                <img src="screenshots/screenshot_0045.png"
+                     alt="Step 9"
+                     class="doc-screenshot w-full h-auto"
+                     loading="lazy"
+                     data-click-x="895" data-click-y="433">
+                
+                <div class="click-highlight" style="display:none;" data-click></div>
+                
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+        
+        <div class="doc-step relative pb-12" id="step-10">
+          <div class="flex gap-5">
+            <!-- Timeline -->
+            <div class="relative flex-shrink-0">
+              <div class="step-node">10</div>
+              
+              <div class="step-connector"></div>
+              
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 pt-1.5">
+              
+              <p class="text-sm text-gray-500 mb-2">
+                Click in Google Chrome
+              </p>
+              
+              
+
+              <div class="screenshot-wrapper">
+                <img src="screenshots/screenshot_0047.png"
+                     alt="Step 10"
+                     class="doc-screenshot w-full h-auto"
+                     loading="lazy"
+                     data-click-x="510" data-click-y="665">
+                
+                <div class="click-highlight" style="display:none;" data-click></div>
+                
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+        
+        <div class="doc-step relative " id="step-11">
+          <div class="flex gap-5">
+            <!-- Timeline -->
+            <div class="relative flex-shrink-0">
+              <div class="step-node">11</div>
+              
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 pt-1.5">
+              
+              <p class="text-sm text-gray-500 mb-2">
+                Click in Google Chrome
+              </p>
+              
+              
+
+              <div class="screenshot-wrapper">
+                <img src="screenshots/screenshot_0050.png"
+                     alt="Step 11"
+                     class="doc-screenshot w-full h-auto"
+                     loading="lazy"
+                     data-click-x="1370" data-click-y="229">
+                
+                <div class="click-highlight" style="display:none;" data-click></div>
+                
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+        
+      </div>
+
+      <!-- Footer -->
+      <div class="py-8 border-t border-gray-100 text-center no-print">
+        <p class="text-xs text-gray-400">Generated from a recorded session</p>
+      </div>
+    </main>
+
+    <!-- Right sidebar: In this guide -->
+    <aside class="sidebar-right no-print w-56 flex-shrink-0 border-l border-gray-100">
+      <div class="p-4">
+        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3">In this guide</h2>
+        <nav id="toc" class="space-y-0.5">
+          
+          <a href="#step-1" class="toc-link" data-step="1">
+            <span class="text-xs text-gray-400 font-mono mr-1">1.</span>
+            
+              Testing Step 1
+            
+          </a>
+          
+          <a href="#step-2" class="toc-link" data-step="2">
+            <span class="text-xs text-gray-400 font-mono mr-1">2.</span>
+            
+              Click in Google Chrome
+            
+          </a>
+          
+          <a href="#step-3" class="toc-link" data-step="3">
+            <span class="text-xs text-gray-400 font-mono mr-1">3.</span>
+            
+              Click in Google Chrome
+            
+          </a>
+          
+          <a href="#step-4" class="toc-link" data-step="4">
+            <span class="text-xs text-gray-400 font-mono mr-1">4.</span>
+            
+              Click in Google Chrome
+            
+          </a>
+          
+          <a href="#step-5" class="toc-link" data-step="5">
+            <span class="text-xs text-gray-400 font-mono mr-1">5.</span>
+            
+              Click in Google Chrome
+            
+          </a>
+          
+          <a href="#step-6" class="toc-link" data-step="6">
+            <span class="text-xs text-gray-400 font-mono mr-1">6.</span>
+            
+              Click in Google Chrome
+            
+          </a>
+          
+          <a href="#step-7" class="toc-link" data-step="7">
+            <span class="text-xs text-gray-400 font-mono mr-1">7.</span>
+            
+              Click in Google Chrome
+            
+          </a>
+          
+          <a href="#step-8" class="toc-link" data-step="8">
+            <span class="text-xs text-gray-400 font-mono mr-1">8.</span>
+            
+              Click in Google Chrome
+            
+          </a>
+          
+          <a href="#step-9" class="toc-link" data-step="9">
+            <span class="text-xs text-gray-400 font-mono mr-1">9.</span>
+            
+              Click in Google Chrome
+            
+          </a>
+          
+          <a href="#step-10" class="toc-link" data-step="10">
+            <span class="text-xs text-gray-400 font-mono mr-1">10.</span>
+            
+              Click in Google Chrome
+            
+          </a>
+          
+          <a href="#step-11" class="toc-link" data-step="11">
+            <span class="text-xs text-gray-400 font-mono mr-1">11.</span>
+            
+              Click in Google Chrome
+            
+          </a>
+          
+        </nav>
+      </div>
+    </aside>
+
+  </div>
+
+  <script>
+    // Highlight TOC link based on scroll position
+    const tocLinks = document.querySelectorAll('#toc .toc-link');
+    const stepEls = document.querySelectorAll('.doc-step');
+
+    function updateActiveToc() {
+      let current = '';
+      stepEls.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= 100) current = el.id;
+      });
+      tocLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveToc, { passive: true });
+    updateActiveToc();
+
+    // Position click highlights after images load
+    document.querySelectorAll('.screenshot-wrapper img[data-click-x]').forEach(img => {
+      const place = () => {
+        const highlight = img.parentElement.querySelector('[data-click]');
+        if (!highlight || !img.naturalWidth) return;
+        const clickX = parseFloat(img.dataset.clickX);
+        const clickY = parseFloat(img.dataset.clickY);
+        // Multiply by 2 to convert macOS logical points to Retina physical pixels
+        const pctX = (clickX * 2 / img.naturalWidth * 100);
+        const pctY = (clickY * 2 / img.naturalHeight * 100);
+        highlight.style.left = pctX + '%';
+        highlight.style.top = pctY + '%';
+        highlight.style.display = 'block';
+      };
+      if (img.complete && img.naturalWidth) place();
+      else img.addEventListener('load', place);
+    });
+  </script>
+</body>
+</html>
