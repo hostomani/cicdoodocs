@@ -36,6 +36,15 @@
       position: relative;
       display: inline-block;
       width: 100%;
+      overflow: hidden;
+    }
+    .screenshot-wrapper.zoomed { cursor: grab; }
+    .screenshot-wrapper.zoomed.panning { cursor: grabbing; }
+    .zoom-inner {
+      position: relative;
+      width: 100%;
+      transform-origin: 0 0;
+      will-change: transform;
     }
     .click-highlight {
       position: absolute;
@@ -87,6 +96,15 @@
     }
     .guide-link:hover { background: #f3f4f6; color: #111827; }
     .guide-link.active { background: #eff6ff; color: #1e40af; font-weight: 500; }
+    .sidebar-category {
+      font-size: 11px;
+      font-weight: 600;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 12px 12px 4px;
+    }
+    .sidebar-category:first-child { padding-top: 0; }
     .toc-link {
       display: block;
       padding: 4px 12px;
@@ -147,14 +165,31 @@
         <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3">Guides</h2>
         <nav class="space-y-0.5">
           
-          <a href="../Add_server/index.html" class="guide-link ">
+          <div class="sidebar-category">Getting Started</div>
+          
+          <a href="../Sign_in_to_CICDoo/index.html" class="guide-link ">
             <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span class="truncate">Add Server</span>
+            <span class="truncate">Sign In To Cicdoo</span>
           </a>
           
-          <a href="../Connect_Sever_in_CICDoo/index.html" class="guide-link ">
+          
+          
+          
+          <div class="sidebar-category">Other</div>
+          
+          <a href="../AWS___Create_EC2_VM/index.html" class="guide-link ">
             <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span class="truncate">Connect Sever In Cicdoo</span>
+            <span class="truncate">Aws   Create Ec2 Vm</span>
+          </a>
+          
+          <a href="../Add_server_in_CICDoo_Dashboard/index.html" class="guide-link ">
+            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="truncate">Add Server In Cicdoo Dashboard</span>
+          </a>
+          
+          <a href="../Create_DNS_Record/index.html" class="guide-link ">
+            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="truncate">Create Dns Record</span>
           </a>
           
           <a href="../Create_Odoo_Project/index.html" class="guide-link active">
@@ -162,19 +197,9 @@
             <span class="truncate">Create Odoo Project</span>
           </a>
           
-          <a href="../Create_Wildcard_DNS_Record___CloudFlare/index.html" class="guide-link ">
-            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span class="truncate">Create Wildcard Dns Record   Cloudflare</span>
-          </a>
-          
           <a href="../How_to_create_S3_Backup_Storage___CloudFlare/index.html" class="guide-link ">
             <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             <span class="truncate">How To Create S3 Backup Storage   Cloudflare</span>
-          </a>
-          
-          <a href="../Provision_AWS_EC2_Instance/index.html" class="guide-link ">
-            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span class="truncate">Provision Aws Ec2 Instance</span>
           </a>
           
           <a href="../Restore_Database_To_Staging_Instance/index.html" class="guide-link ">
@@ -182,20 +207,11 @@
             <span class="truncate">Restore Database To Staging Instance</span>
           </a>
           
-          <a href="../nnnjnjnj/index.html" class="guide-link ">
-            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span class="truncate">Nnnjnjnj</span>
-          </a>
-          
           <a href="../setup_databse_ssh_tunneling/index.html" class="guide-link ">
             <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             <span class="truncate">Setup Databse Ssh Tunneling</span>
           </a>
           
-          <a href="../signin_with_google/index.html" class="guide-link ">
-            <svg class="w-4 h-4 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span class="truncate">Signin With Google</span>
-          </a>
           
         </nav>
       </div>
@@ -651,89 +667,29 @@
         <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3">In this guide</h2>
         <nav id="toc" class="space-y-0.5">
           
-          <a href="#step-1" class="toc-link" data-step="1">
-            <span class="text-xs text-gray-400 font-mono mr-1">1.</span>
-            
-              Click in Google Chrome
-            
-          </a>
           
-          <a href="#step-2" class="toc-link" data-step="2">
-            <span class="text-xs text-gray-400 font-mono mr-1">2.</span>
-            
-              Click in Google Chrome
-            
-          </a>
           
-          <a href="#step-3" class="toc-link" data-step="3">
-            <span class="text-xs text-gray-400 font-mono mr-1">3.</span>
-            
-              Click in Google Chrome
-            
-          </a>
           
-          <a href="#step-4" class="toc-link" data-step="4">
-            <span class="text-xs text-gray-400 font-mono mr-1">4.</span>
-            
-              Click in Google Chrome
-            
-          </a>
           
-          <a href="#step-5" class="toc-link" data-step="5">
-            <span class="text-xs text-gray-400 font-mono mr-1">5.</span>
-            
-              Click in Google Chrome
-            
-          </a>
           
-          <a href="#step-6" class="toc-link" data-step="6">
-            <span class="text-xs text-gray-400 font-mono mr-1">6.</span>
-            
-              Click in Google Chrome
-            
-          </a>
           
-          <a href="#step-7" class="toc-link" data-step="7">
-            <span class="text-xs text-gray-400 font-mono mr-1">7.</span>
-            
-              Click in Google Chrome
-            
-          </a>
           
-          <a href="#step-8" class="toc-link" data-step="8">
-            <span class="text-xs text-gray-400 font-mono mr-1">8.</span>
-            
-              Click in Google Chrome
-            
-          </a>
           
-          <a href="#step-9" class="toc-link" data-step="9">
-            <span class="text-xs text-gray-400 font-mono mr-1">9.</span>
-            
-              Click in Google Chrome
-            
-          </a>
           
-          <a href="#step-10" class="toc-link" data-step="10">
-            <span class="text-xs text-gray-400 font-mono mr-1">10.</span>
-            
-              Click in Google Chrome
-            
-          </a>
           
-          <a href="#step-11" class="toc-link" data-step="11">
-            <span class="text-xs text-gray-400 font-mono mr-1">11.</span>
-            
-              Click in Google Chrome
-            
-          </a>
           
-          <a href="#step-12" class="toc-link" data-step="12">
-            <span class="text-xs text-gray-400 font-mono mr-1">12.</span>
-            
-              Click in Google Chrome
-            
-          </a>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
           
         </nav>
       </div>
@@ -759,6 +715,68 @@
 
     window.addEventListener('scroll', updateActiveToc, { passive: true });
     updateActiveToc();
+
+    // Zoom-to-cursor on screenshots
+    document.querySelectorAll('.screenshot-wrapper').forEach(wrapper => {
+      const inner = document.createElement('div');
+      inner.className = 'zoom-inner';
+      while (wrapper.firstChild) inner.appendChild(wrapper.firstChild);
+      wrapper.appendChild(inner);
+
+      let scale = 1, tx = 0, ty = 0;
+      let isPanning = false, startX, startY, startTx, startTy;
+
+      wrapper.addEventListener('wheel', e => {
+        if (!e.ctrlKey && !e.metaKey) return;
+        e.preventDefault();
+        const rect = wrapper.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const oldScale = scale;
+        const factor = e.deltaY > 0 ? 0.92 : 1.08;
+        scale = Math.min(Math.max(scale * factor, 1), 8);
+        tx = mouseX - (mouseX - tx) * (scale / oldScale);
+        ty = mouseY - (mouseY - ty) * (scale / oldScale);
+        clamp();
+        apply();
+      }, { passive: false });
+
+      wrapper.addEventListener('mousedown', e => {
+        if (scale <= 1) return;
+        isPanning = true;
+        startX = e.clientX; startY = e.clientY;
+        startTx = tx; startTy = ty;
+        wrapper.classList.add('panning');
+        e.preventDefault();
+      });
+      window.addEventListener('mousemove', e => {
+        if (!isPanning) return;
+        tx = startTx + (e.clientX - startX);
+        ty = startTy + (e.clientY - startY);
+        clamp();
+        apply();
+      });
+      window.addEventListener('mouseup', () => {
+        if (!isPanning) return;
+        isPanning = false;
+        wrapper.classList.remove('panning');
+      });
+
+      wrapper.addEventListener('dblclick', () => {
+        scale = 1; tx = 0; ty = 0;
+        apply();
+      });
+
+      function clamp() {
+        const w = wrapper.clientWidth, h = wrapper.clientHeight;
+        tx = Math.min(0, Math.max(w - w * scale, tx));
+        ty = Math.min(0, Math.max(h - h * scale, ty));
+      }
+      function apply() {
+        inner.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`;
+        wrapper.classList.toggle('zoomed', scale > 1);
+      }
+    });
 
     // Position click highlights after images load
     document.querySelectorAll('.screenshot-wrapper img[data-click-x]').forEach(img => {
